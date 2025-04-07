@@ -1,0 +1,6 @@
+@FullStackCrud.Server_HostAddress = http://localhost:5122
+
+GET {{FullStackCrud.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

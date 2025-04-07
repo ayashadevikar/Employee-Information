@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "fullstackcrud.client", "fullstackcrud.client\fullstackcrud.client.esproj", "{F145FC52-6D25-310C-84EB-B32F43BBE456}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FullStackCrud.Server", "FullStackCrud.Server\FullStackCrud.Server.csproj", "{F495CF20-1C3F-4374-A908-2353539893B9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F145FC52-6D25-310C-84EB-B32F43BBE456}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F145FC52-6D25-310C-84EB-B32F43BBE456}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F145FC52-6D25-310C-84EB-B32F43BBE456}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F145FC52-6D25-310C-84EB-B32F43BBE456}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F145FC52-6D25-310C-84EB-B32F43BBE456}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F145FC52-6D25-310C-84EB-B32F43BBE456}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F495CF20-1C3F-4374-A908-2353539893B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F495CF20-1C3F-4374-A908-2353539893B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F495CF20-1C3F-4374-A908-2353539893B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F495CF20-1C3F-4374-A908-2353539893B9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C76FE7B0-0CFD-46E1-A07E-B5753F0B6DBA}
+	EndGlobalSection
+EndGlobal
