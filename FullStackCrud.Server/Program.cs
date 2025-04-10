@@ -24,15 +24,8 @@ namespace FullStackCrud.Server
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowVercel", policy =>
-                {
-                    policy.WithOrigins("https://employee-information-6kow.vercel.app/") // Vercel frontend URL
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
-            });
+            builder.Services.AddCors();
+        
 
             builder.Services.AddControllers();
 
@@ -55,7 +48,7 @@ namespace FullStackCrud.Server
                 app.UseSwaggerUI();
             }
 
-            app.UseCors("AllowVercel");
+            app.UseCors("AllowAll");
 
             app.UseCors(builder =>
             {
