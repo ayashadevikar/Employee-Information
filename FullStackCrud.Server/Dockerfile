@@ -9,6 +9,7 @@ WORKDIR /src
 
 # Copy and restore dependencies
 COPY FullStackCrud.Server.csproj ./
+
 RUN dotnet restore
 
 # Copy the rest of the source code
