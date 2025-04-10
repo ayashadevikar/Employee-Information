@@ -24,7 +24,7 @@ namespace FullStackCrud.Server
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddCors((options =>
+            builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowVercel", policy =>
                 {
