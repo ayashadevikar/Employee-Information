@@ -10,7 +10,7 @@
 *.userosscache
 *.sln.docstates
 
-.nixpacks*
+.nixpacks.toml*
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
