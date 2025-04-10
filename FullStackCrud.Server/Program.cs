@@ -27,12 +27,13 @@ namespace FullStackCrud.Server
             builder.Services.AddCors();
 
             builder.Services.AddControllers();
-          
 
-            
-      
 
-        
+
+
+
+           
+
 
             var app = builder.Build();
 
@@ -59,7 +60,7 @@ namespace FullStackCrud.Server
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
+            app.MapGet("/", () => "Backend is running!");
 
             app.MapControllers();
 
