@@ -24,25 +24,25 @@ const CRUD = () => {
   const [editName, setEditName] = useState('');
   const [editAge, setEditAge] = useState('');
 
-    const empdata = [
-        {
-           id : 1,
-           name : 'Manoj',
-           age : 29,
-         },
+    //const empdata = [
+    //    {
+    //       id : 1,
+    //       name : 'Manoj',
+    //       age : 29,
+    //     },
 
-         {
-            id : 2,
-            name : 'Virat',
-            age : 29,
-          },
+    //     {
+    //        id : 2,
+    //        name : 'Virat',
+    //        age : 29,
+    //      },
 
-          {
-            id : 3,
-            name : 'Sam',
-            age : 29,
-          },
-    ]
+    //      {
+    //        id : 3,
+    //        name : 'Sam',
+    //        age : 29,
+    //      },
+    //]
 
     const [data, setData] = useState([]);
 
@@ -51,7 +51,7 @@ const CRUD = () => {
     },[])
 
     const getData = () => {
-      axios.get(`https://localhost:7092/api/Employee`)
+      axios.get(`https://employee-information.onrender.com/api/Employee`)
       .then((result)=>{
         setData(result.data)
       })
@@ -63,7 +63,7 @@ const CRUD = () => {
     const handleEdit = (id) => {
         //alert(id);
         handleShow();
-        axios.get(`https://localhost:7092/api/Employee/${id}`)
+        axios.get(`https://employee-information.onrender.com/api/Employee/${id}`)
         .then((result)=>{
             setEditName(result.data.name);
             setEditAge(result.data.age);
@@ -77,7 +77,7 @@ const CRUD = () => {
     const handleDelete = (id) => {
         if(window.confirm("Are you sure to delete this employee") == true)
         {
-            axios.delete(`https://localhost:7092/api/Employee/${id}`)
+            axios.delete(`https://employee-information.onrender.com/api/Employee/${id}`)
             .then((result)=>{
               if(result.status === 200){
                 toast.success('Employee has been deleted');
@@ -91,7 +91,7 @@ const CRUD = () => {
     }
 
     const handleUpdate =()=>{
-        const url = `https://localhost:7092/api/Employee/${editID}`
+        const url = `https://employee-information.onrender.com/api/Employee/${editID}`
         const data = {
           "id": editID,
           "name": editName,
@@ -99,7 +99,7 @@ const CRUD = () => {
         }
 
         axios.put(url, data)
-        .then((result) =>{
+        .then(() =>{
           handleClose();
           getData();
           clear();
@@ -110,14 +110,14 @@ const CRUD = () => {
     }
 
     const handleSave =()=>{
-        const url = `https://localhost:7092/api/Employee`;
+        const url = `https://employee-information.onrender.com/api/Employee`;
         const data = {
           "name": name,
           "age": age
         }
 
         axios.post(url, data)
-        .then((result) =>{
+        .then(() =>{
           getData();
           clear();
           toast.success('Employee has been added');
