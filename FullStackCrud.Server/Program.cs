@@ -1,6 +1,7 @@
 
 using FullStackCrud.Server.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace FullStackCrud.Server
 {
@@ -15,16 +16,15 @@ namespace FullStackCrud.Server
             builder.Services.AddDbContext<EmployeeContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("CRUDCS")));
 
+
+
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll",
-                    policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-            });
+            builder.Services.AddCors();
 
             builder.Services.AddControllers();
           
@@ -48,13 +48,13 @@ namespace FullStackCrud.Server
 
             app.UseCors("AllowAll");
 
-            //app.UseCors(builder =>
-            //{
-            //    builder
-            //    .AllowAnyOrigin()
-            //    .AllowAnyMethod()
-            //    .AllowAnyHeader();
-            //});
+            app.UseCors(builder =>
+            {
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
 
             app.UseHttpsRedirection();
 
