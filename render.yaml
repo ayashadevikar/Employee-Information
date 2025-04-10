@@ -1,8 +1,9 @@
 services:
   - type: web
     name: dotnet8-api
-    env: docker
     repo: https://github.com/your-username/your-repo
     branch: main
-    dockerContext: ./server
     plan: free
+    dockerContext: ./server
+    dockerfilePath: ./server/Dockerfile
+
