@@ -1,6 +1,7 @@
 
 using FullStackCrud.Server.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using System;
 
 namespace FullStackCrud.Server
@@ -28,14 +29,20 @@ namespace FullStackCrud.Server
 
             builder.Services.AddControllers();
 
-
-
-
-
-           
-
-
             var app = builder.Build();
+
+            // Set static file path to ClientApp/dist
+            var rootPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp", "dist");
+
+            app.UseDefaultFiles(new DefaultFilesOptions
+            {
+                FileProvider = new PhysicalFileProvider(rootPath)
+            });
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(rootPath)
+            });
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
@@ -64,7 +71,11 @@ namespace FullStackCrud.Server
 
             app.MapControllers();
 
-            app.MapFallbackToFile("/index.html");
+            // Fallback to React index.html
+            app.MapFallbackToFile("/index.html", new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(rootPath)
+            });
 
             app.Run();
         }
