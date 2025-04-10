@@ -28,7 +28,7 @@ namespace FullStackCrud.Server
             {
                 options.AddPolicy("AllowVercel", policy =>
                 {
-                    policy.WithOrigins("https://your-frontend-url.vercel.app") // Vercel frontend URL
+                    policy.WithOrigins("https://employee-information-6kow.vercel.app/") // Vercel frontend URL
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
