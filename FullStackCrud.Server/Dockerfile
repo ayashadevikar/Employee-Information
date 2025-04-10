@@ -12,7 +12,6 @@ EXPOSE 8081
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0-nanoserver-1809 AS build
-ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["FullStackCrud.Server/FullStackCrud.Server.csproj", "FullStackCrud.Server/"]
 COPY ["fullstackcrud.client/fullstackcrud.client.esproj", "fullstackcrud.client/"]

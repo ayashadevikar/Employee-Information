@@ -4,6 +4,7 @@ services:
     repo: https://github.com/your-username/your-repo
     branch: main
     plan: free
-    dockerContext: ./server
-    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./FullStackCrud.Server
+    dockerfilePath: ./FullStackCrud.Server/Dockerfile
+
 
