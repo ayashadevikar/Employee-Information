@@ -74,8 +74,8 @@ const CRUD = () => {
 
     const handleDelete = (id) => {
         if (window.confirm("Are you sure to delete this employee")) {
-            const apiUrl = `http://localhost:5122/api/Employee/${id}`
-
+            //const apiUrl = `http://localhost:5122/api/Employee/${id}`
+           const apiUrl = `import.meta.env.VITE_API_URL`
             if (!apiUrl) {
                 toast.error("API URL is missing.");
                 return;
