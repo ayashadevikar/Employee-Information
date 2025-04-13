@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: dotnet8-api
-    env: docker
-    plan: free
-    repo: https://github.com/ayashadevikar/Employee-Information
-    branch: master
-    dockerContext: ./FullStackCrud.Server
-    dockerfilePath: ./FullStackCrud.Server/Dockerfile

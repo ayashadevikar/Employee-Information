@@ -24,27 +24,7 @@ namespace FullStackCrud.Server
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            //builder.Services.AddCors();
-
-
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowFrontend",
-                    policy => policy
-                        .WithOrigins("https://employee-information-2.onrender.com")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                );
-            });
-
-            builder.Services.AddControllers();
-
-
-
-
-
-           
-
+            builder.Services.AddCors();
 
             var app = builder.Build();
 
@@ -57,10 +37,7 @@ namespace FullStackCrud.Server
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            app.UseCors("AllowFrontend");
-
-            // app.UseCors("AllowAll");
-
+    
             app.UseCors(builder =>
             {
                 builder
