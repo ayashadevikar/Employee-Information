@@ -23,7 +23,8 @@ const CRUD = () => {
     const handleShow = () => setShow(true);
 
     const getData = () => {
-        const apiUrl = import.meta.env.VITE_API_URL; // Read API URL from environment variable
+       const apiUrl = import.meta.env.VITE_API_URL; // Read API URL from environment variable
+       
         //const apiUrl = `http://localhost:5122/api/Employee`;
 
         if (!apiUrl) {
