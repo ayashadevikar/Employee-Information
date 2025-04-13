@@ -24,7 +24,15 @@ namespace FullStackCrud.Server
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddCors();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                }
+                    );
 
             var app = builder.Build();
 
@@ -37,14 +45,15 @@ namespace FullStackCrud.Server
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-    
-            app.UseCors(builder =>
-            {
-                builder
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-            });
+
+                app.UseCors("AllowAll");
+            //    app.UseCors(builder =>
+            //{
+            //    builder
+            //    .AllowAnyOrigin()
+            //    .AllowAnyMethod()
+            //    .AllowAnyHeader();
+            //});
 
             app.UseHttpsRedirection();
 
