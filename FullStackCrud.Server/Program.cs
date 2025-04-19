@@ -1,7 +1,10 @@
+﻿
+//using Employee.Controllers;
+using FullStackCrud.Server.Data;
+//using FullStackCrud.Server.Models;
+using FullStackCrud.Server.Services;  
+//using Microsoft.Extensions.Options;
 
-using FullStackCrud.Server.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace FullStackCrud.Server
 {
@@ -11,19 +14,21 @@ namespace FullStackCrud.Server
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
-            builder.Services.AddDbContext<EmployeeContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("CRUDCS")));
-
+            // Add services to the container
+            builder.Services.Configure<DatabaseSettings>(
+     builder.Configuration.GetSection("ConnectionStrings"));
 
 
+  
+            builder.Services.AddSingleton<EmployeeService>();
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+            // Swagger/OpenAPI setup
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // CORS policy
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll", policy =>
@@ -31,40 +36,32 @@ namespace FullStackCrud.Server
                     policy.AllowAnyOrigin()
                           .AllowAnyHeader()
                           .AllowAnyMethod();
-                }
-                    );
+                });
+            });
 
             var app = builder.Build();
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
-            // Configure the HTTP request pipeline.
+            // Swagger UI only in development
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
-                app.UseCors("AllowAll");
-            //    app.UseCors(builder =>
-            //{
-            //    builder
-            //    .AllowAnyOrigin()
-            //    .AllowAnyMethod()
-            //    .AllowAnyHeader();
-            //});
+            app.UseCors("AllowAll");
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
+
             app.MapGet("/", () => "Backend is running!");
-
             app.MapControllers();
-
             app.MapFallbackToFile("/index.html");
 
             app.Run();
         }
     }
-}
+
+};

@@ -1,13 +1,21 @@
-﻿namespace FullStackCrud.Server.Models
+﻿
+
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace FullStackCrud.Server.Models
 {
     public class Employee
     {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; } = string.Empty;
 
-        public int ID { get; set; }
-
+        [BsonElement("name")]
         public string? Name { get; set; }
 
-        public string? Age { get; set; }
-
+        [BsonElement("age")]
+        public int? Age { get; set; }
     }
 }
+

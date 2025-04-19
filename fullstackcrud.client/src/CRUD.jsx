@@ -23,9 +23,9 @@ const CRUD = () => {
     const handleShow = () => setShow(true);
 
     const getData = () => {
-       const apiUrl = import.meta.env.VITE_API_URL; // Read API URL from environment variable
+      // const apiUrl = import.meta.env.VITE_API_URL; 
        
-        //const apiUrl = `http://localhost:5122/api/Employee`;
+        const apiUrl = `http://localhost:5000/api/Employee`;
 
         if (!apiUrl) {
             toast.error("API URL is missing. Please check your environment variables.");
@@ -33,8 +33,8 @@ const CRUD = () => {
         }
 
 
-        axios.get(`${apiUrl}/api/Employee`)
-        //axios.get(apiUrl)
+        //axios.get(`${apiUrl}/api/Employee`)
+        axios.get(apiUrl)
             .then((result) => {
                 const fetchedData = Array.isArray(result.data) ? result.data : []; // Ensure data is an array
                 setData(fetchedData);
@@ -51,16 +51,16 @@ const CRUD = () => {
 
     const handleEdit = (id) => {
         handleShow();
-        const apiUrl = import.meta.env.VITE_API_URL; // Read API URL from environment variable
-       // const apiUrl = `http://localhost:5122/api/Employee/${id}`;
+       // const apiUrl = import.meta.env.VITE_API_URL; // Read API URL from environment variable
+        const apiUrl = `http://localhost:5000/api/Employee/${id}`;
 
         if (!apiUrl) {
             toast.error("API URL is missing.");
             return;
         }
 
-        axios.get(`${apiUrl}/api/Employee/${id}`)
-        //axios.get(apiUrl )
+        //axios.get(`${apiUrl}/api/Employee/${id}`)
+        axios.get(apiUrl )
             .then((result) => {
                 setEditName(result.data.name);
                 setEditAge(result.data.age);
@@ -72,21 +72,26 @@ const CRUD = () => {
             });
     };
 
-    const handleDelete = (id) => {
-        if (window.confirm("Are you sure to delete this employee")) {
-            //const apiUrl = `http://localhost:5122/api/Employee/${id}`
-           const apiUrl = `import.meta.env.VITE_API_URL`
-            if (!apiUrl) {
-                toast.error("API URL is missing.");
-                return;
-            }
 
-           axios.delete(`${apiUrl}/api/Employee/${id}`)
-           //axios.delete(apiUrl)
+
+    const handleDelete = (id) => {
+        if (window.confirm("Are you sure you want to delete this employee?")) {
+            const apiUrl = `http://localhost:5000/api/Employee/${id}`;
+    
+            // Perform the DELETE request
+            axios.delete(apiUrl)
                 .then((result) => {
-                    if (result.status === 200) {
-                        toast.success('Employee has been deleted');
-                        getData();
+                    if (result.status === 204) {
+                        toast.success("Employee has been deleted");
+    
+                        // Update the UI immediately by removing the employee from the state
+                        // Make sure `id` is passed correctly from the backend, if needed change `id` to `_id`
+                        setData(prevData => prevData.filter(emp => emp.id !== id));  // Assuming `emp.id` is used, adjust if `_id` is used
+    
+                        // Optionally, re-fetch after a short delay for consistency with the backend
+                        setTimeout(() => {
+                            getData();  // Re-fetch data if necessary
+                        }, 500);
                     }
                 })
                 .catch((error) => {
@@ -95,10 +100,35 @@ const CRUD = () => {
                 });
         }
     };
+    
+
+    // const handleDelete = (id) => {
+    //     if (window.confirm("Are you sure to delete this employee")) {
+    //         const apiUrl = `http://localhost:5000/api/Employee/${id}`
+    //        //const apiUrl = `import.meta.env.VITE_API_URL`
+    //         if (!apiUrl) {
+    //             toast.error("API URL is missing.");
+    //             return;
+    //         }
+
+    //        //axios.delete(`${apiUrl}/api/Employee/${id}`)
+    //       axios.delete(apiUrl)
+    //             .then((result) => {
+    //                 if (result.status === 200) {
+    //                     toast.success('Employee has been deleted');
+    //                    getData();
+    //                 }
+    //             })
+    //             .catch((error) => {
+    //                 console.error(error);
+    //                 toast.error("Failed to delete employee.");
+    //             });
+    //     }
+    // };
 
     const handleUpdate = () => {
-        const apiUrl = import.meta.env.VITE_API_URL;
-       //const apiUrl = `http://localhost:5122/api/Employee/${editID}`;
+        //const apiUrl = import.meta.env.VITE_API_URL;
+       const apiUrl = `http://localhost:5000/api/Employee/${editID}`;
 
         if (!apiUrl) {
             toast.error("API URL is missing.");
@@ -111,8 +141,8 @@ const CRUD = () => {
             "age": editAge
         };
 
-       axios.put(`${apiUrl}/api/Employee/${editID}`, data)
-       //axios.put(apiUrl, data)
+       //axios.put(`${apiUrl}/api/Employee/${editID}`, data)
+       axios.put(apiUrl, data)
             .then(() => {
                 handleClose();
                 getData();
@@ -126,8 +156,8 @@ const CRUD = () => {
     };
 
     const handleSave = () => {
-        const apiUrl = import.meta.env.VITE_API_URL;
-       // const apiUrl = `http://localhost:5122/api/Employee`;
+       // const apiUrl = import.meta.env.VITE_API_URL;
+       const apiUrl = `http://localhost:5000/api/Employee`;
 
         if (!apiUrl) {
             toast.error("API URL is missing.");
@@ -139,8 +169,8 @@ const CRUD = () => {
             "age": age
         };
 
-        axios.post(`${apiUrl}/api/Employee`, data)
-           //axios.post(apiUrl, data)
+        //axios.post(`${apiUrl}/api/Employee`, data)
+           axios.post(apiUrl, data)
             .then(() => {
                 getData();
                 clear();
