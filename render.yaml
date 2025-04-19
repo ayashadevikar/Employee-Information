@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: fullstackcrud-backend
+    env: docker
+    repo: https://github.com/ayashadevikar8@gmail.com/EmployeeInformation
+    branch: main
+    rootDir: server
