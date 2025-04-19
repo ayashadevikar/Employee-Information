@@ -1,15 +1,16 @@
 services:
   - type: web
     name: fullstackcrud-backend
-    runtime: docker  # Specify 'docker' runtime here
-    repo: https://github.com/ayashadevikar/EmployeeInformation  # Correct repo URL
-    branch: main
-    rootDir: server  # Ensure your backend code is inside this folder
+    runtime: docker  # Use docker runtime
+    repo: https://github.com/ayashadevikar/Employee-Information  # Your repo URL
+    branch: master  # Or main, depending on your repo
+    rootDir: server  # Specify the folder where your backend code resides
     buildCommand: |
       curl -sSL https://dot.net/v1/dotnet-install.sh | bash
       export PATH=$PATH:$HOME/.dotnet
       dotnet publish -c Release -o out
     startCommand: |
       export PATH=$PATH:$HOME/.dotnet
-      dotnet FullStackCrud.Server.dll  # Make sure this matches your backend entry point
+      dotnet FullStackCrud.Server.dll  # Ensure this matches the DLL in your 'server' folder
+
 
