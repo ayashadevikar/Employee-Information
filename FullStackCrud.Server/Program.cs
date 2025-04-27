@@ -1,10 +1,11 @@
-﻿
-//using Employee.Controllers;
-using FullStackCrud.Server.Data;
-//using FullStackCrud.Server.Models;
-using FullStackCrud.Server.Services;  
-//using Microsoft.Extensions.Options;
-
+﻿using FullStackCrud.Server.Data;
+using FullStackCrud.Server.Services;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using FullStackCrud.Server.Helpers;
 
 namespace FullStackCrud.Server
 {
@@ -15,28 +16,54 @@ namespace FullStackCrud.Server
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container
-            builder.Services.Configure<DatabaseSettings>(
-     builder.Configuration.GetSection("ConnectionStrings"));
+            builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("ConnectionStrings"));
 
+            // Register MongoClient as Singleton
+            builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
+            {
+                var mongoClient = new MongoClient(builder.Configuration.GetValue<string>("ConnectionStrings:Connection"));
+                return mongoClient;
+            });
 
-  
-            builder.Services.AddSingleton<EmployeeService>();
+            // Register services
+            builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<EmployeeService>();
 
             builder.Services.AddControllers();
-
-            // Swagger/OpenAPI setup
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            // CORS policy
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll", policy =>
                 {
-                    policy.AllowAnyOrigin()
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
+                    policy.AllowAnyOrigin()   // Allow any origin (frontend domain)
+             .AllowAnyHeader()   // Allow any headers
+             .AllowAnyMethod();
                 });
+            });
+
+            // JWT authentication setup
+            var jwtSection = builder.Configuration.GetSection("Jwt");
+            var jwtKey = jwtSection.GetValue<string>("Key");
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "FullStackCrud.Server",
+                    ValidAudience = "fullstackcrud.client",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+                };
             });
 
             var app = builder.Build();
@@ -44,15 +71,14 @@ namespace FullStackCrud.Server
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
-            // Swagger UI only in development
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
-            app.UseCors("AllowAll");
-
+            app.UseCors("AllowAllOrigins");
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseAuthorization();
 
@@ -63,5 +89,4 @@ namespace FullStackCrud.Server
             app.Run();
         }
     }
-
-};
+}

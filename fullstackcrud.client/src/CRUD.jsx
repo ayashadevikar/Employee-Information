@@ -193,8 +193,10 @@ const CRUD = () => {
     return (
         <>
             <ToastContainer />
-            <Container>
-                <Row>
+            <h1>Employee List</h1>
+            {/* <Container>
+                <h1 className="text-center">Employee Information</h1>
+                <Row className="m-4">
                     <Col>
                         <input
                             type="text"
@@ -217,7 +219,7 @@ const CRUD = () => {
                         <button className="btn btn-primary" onClick={() => handleSave()}>Submit</button>
                     </Col>
                 </Row>
-            </Container>
+            </Container> */}
 
             <Table striped bordered hover>
                 <thead>
@@ -225,7 +227,7 @@ const CRUD = () => {
                         <th>#</th>
                         <th>Name</th>
                         <th>Age</th>
-                        <th>Actions</th>
+                        {/* <th>Actions</th> */}
                     </tr>
                 </thead>
                 <tbody>
@@ -237,10 +239,10 @@ const CRUD = () => {
                                         <td>{index + 1}</td>
                                         <td>{item.name}</td>
                                         <td>{item.age}</td>
-                                        <td colSpan={2}>
+                                        {/* <td colSpan={2}>
                                             <button className="btn btn-primary" onClick={() => handleEdit(item.id)}>Edit</button> &nbsp;
                                             <button className="btn btn-danger" onClick={() => handleDelete(item.id)}>Delete</button>
-                                        </td>
+                                        </td> */}
                                     </tr>
                                 );
                             })

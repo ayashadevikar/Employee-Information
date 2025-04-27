@@ -2,6 +2,7 @@
 using MongoDB.Driver;
 using FullStackCrud.Server.Models;
 using FullStackCrud.Server.Data;
+using System.Runtime;
 
 namespace FullStackCrud.Server.Services
 {
@@ -9,11 +10,13 @@ namespace FullStackCrud.Server.Services
     {
         private readonly IMongoCollection<Employee> _employeeCollection;
 
-        public EmployeeService(IOptions<DatabaseSettings> settings)
+        public EmployeeService(IOptions<DatabaseSettings> dbSettings)
         {
-            var mongoClient = new MongoClient(settings.Value.Connection);
-            var mongoDb = mongoClient.GetDatabase(settings.Value.DatabaseName);
-            _employeeCollection = mongoDb.GetCollection<Employee>(settings.Value.CollectionName);
+            Console.WriteLine($"EmployeeCollectionName: {dbSettings.Value.EmployeeCollectionName}");
+
+            var mongoClient = new MongoClient(dbSettings.Value.Connection);
+            var database = mongoClient.GetDatabase(dbSettings.Value.DatabaseName);
+            _employeeCollection = database.GetCollection<Employee>(dbSettings.Value.EmployeeCollectionName);
         }
 
         public async Task<List<Employee>> GetAsync() =>
