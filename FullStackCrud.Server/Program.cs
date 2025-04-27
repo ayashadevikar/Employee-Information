@@ -77,7 +77,7 @@ namespace FullStackCrud.Server
                 app.UseSwaggerUI();
             }
 
-            app.UseCors("AllowAllOrigins");
+            app.UseCors("AllowAll");
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseAuthorization();

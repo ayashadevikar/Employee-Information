@@ -33,7 +33,7 @@ const CRUD = () => {
         }
 
 
-        axios.get(`${apiUrl}/api/Employee`)
+        axios.get(`${apiUrl}/api/employee`)
        // axios.get(apiUrl)
             .then((result) => {
                 const fetchedData = Array.isArray(result.data) ? result.data : []; // Ensure data is an array
@@ -59,7 +59,7 @@ const CRUD = () => {
             return;
         }
 
-        axios.get(`${apiUrl}/api/Employee/${id}`)
+        axios.get(`${apiUrl}/api/employee/${id}`)
         //axios.get(apiUrl )
             .then((result) => {
                 setEditName(result.data.name);
@@ -141,7 +141,7 @@ const CRUD = () => {
             "age": editAge
         };
 
-       axios.put(`${apiUrl}/api/Employee/${editID}`, data)
+       axios.put(`${apiUrl}/api/employee/${editID}`, data)
        //axios.put(apiUrl, data)
             .then(() => {
                 handleClose();
@@ -169,7 +169,7 @@ const CRUD = () => {
             "age": age
         };
 
-        axios.post(`${apiUrl}/api/Employee`, data)
+        axios.post(`${apiUrl}/api/employee`, data)
            //axios.post(apiUrl, data)
             .then(() => {
                 getData();
