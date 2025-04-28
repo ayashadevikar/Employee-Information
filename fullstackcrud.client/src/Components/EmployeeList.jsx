@@ -75,33 +75,45 @@ const CRUD = () => {
 
 
     const handleDelete = (id) => {
+        // Confirm delete action
         if (window.confirm("Are you sure you want to delete this employee?")) {
-           // const apiUrl = `http://localhost:5000/api/Employee/${id}`;
-          const apiUrl = `import.meta.env.VITE_API_URL`
-            // Perform the DELETE request
-            axios.delete(apiUrl)
-                .then((result) => {
-                    if (result.status === 204) {
-                        toast.success("Employee has been deleted");
-    
-                        // Update the UI immediately by removing the employee from the state
-                        // Make sure `id` is passed correctly from the backend, if needed change `id` to `_id`
-                        setData(prevData => prevData.filter(emp => emp.id !== id));  // Assuming `emp.id` is used, adjust if `_id` is used
-    
-                        // Optionally, re-fetch after a short delay for consistency with the backend
-                        setTimeout(() => {
-                            getData();  // Re-fetch data if necessary
-                        }, 500);
-                    }
-                })
-                .catch((error) => {
-                    console.error(error);
-                    toast.error("Failed to delete employee.");
-                });
+          const apiUrl = `${import.meta.env.VITE_API_URL}/api/employee/${id}`;
+      
+          // Retrieve token from localStorage (assuming it's stored on login)
+          const token = localStorage.getItem("token");
+      
+          // If no token, block operation
+          if (!token) {
+            toast.error("Unauthorized. Please log in.");
+            return;
+          }
+      
+          // Perform the DELETE request with Authorization header
+          axios.delete(apiUrl, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((result) => {
+            if (result.status === 204) {
+              toast.success("Employee has been deleted");
+      
+              // Remove employee from the state
+              setData(prevData => prevData.filter(emp => emp.id !== id));
+      
+              // Optionally, re-fetch after a short delay
+              setTimeout(() => {
+                getData();
+              }, 500);
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            toast.error("Failed to delete employee.");
+          });
         }
-    };
-    
-
+      };
+      
     // const handleDelete = (id) => {
     //     if (window.confirm("Are you sure to delete this employee")) {
     //         const apiUrl = `http://localhost:5000/api/Employee/${id}`
@@ -193,8 +205,8 @@ const CRUD = () => {
     return (
         <>
             <ToastContainer />
-            <h1>Employee List</h1>
-            {/* <Container>
+            <h1>Employee Info</h1>
+             <Container>
                 <h1 className="text-center">Employee Information</h1>
                 <Row className="m-4">
                     <Col>
@@ -219,7 +231,7 @@ const CRUD = () => {
                         <button className="btn btn-primary" onClick={() => handleSave()}>Submit</button>
                     </Col>
                 </Row>
-            </Container> */}
+            </Container> 
 
             <Table striped bordered hover>
                 <thead>
@@ -227,7 +239,7 @@ const CRUD = () => {
                         <th>#</th>
                         <th>Name</th>
                         <th>Age</th>
-                        {/* <th>Actions</th> */}
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -239,10 +251,10 @@ const CRUD = () => {
                                         <td>{index + 1}</td>
                                         <td>{item.name}</td>
                                         <td>{item.age}</td>
-                                        {/* <td colSpan={2}>
+                                        <td colSpan={2}>
                                             <button className="btn btn-primary" onClick={() => handleEdit(item.id)}>Edit</button> &nbsp;
                                             <button className="btn btn-danger" onClick={() => handleDelete(item.id)}>Delete</button>
-                                        </td> */}
+                                        </td>
                                     </tr>
                                 );
                             })
