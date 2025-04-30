@@ -7,7 +7,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 const CRUD = () => {
@@ -18,6 +18,7 @@ const CRUD = () => {
     const [editName, setEditName] = useState('');
     const [editAge, setEditAge] = useState('');
     const [data, setData] = useState([]);
+    const userName = localStorage.getItem('userName');
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -204,10 +205,13 @@ const CRUD = () => {
 
     return (
         <>
-            <ToastContainer />
-            <h1>Employee Info</h1>
+            {/* <ToastContainer /> */}
+            <div className="d-flex justify-content-between align-items-center mb-3 p-2">
+              <h3>Employee List</h3>
+            <h3>Welcome, {userName} 👋</h3>
+            </div>
              <Container>
-                <h1 className="text-center">Employee Information</h1>
+                <h3 className="text-center">Employee Information</h3>
                 <Row className="m-4">
                     <Col>
                         <input
@@ -232,7 +236,7 @@ const CRUD = () => {
                     </Col>
                 </Row>
             </Container> 
-
+         
             <Table striped bordered hover>
                 <thead>
                     <tr>

@@ -7,6 +7,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -18,6 +19,8 @@ const Home = () => {
     const [editName, setEditName] = useState('');
     const [editAge, setEditAge] = useState('');
     const [data, setData] = useState([]);
+    const navigate = useNavigate();
+
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -190,12 +193,19 @@ const Home = () => {
         setEditId('');
     };
 
+    const handleAddBookClick = () => {
+        navigate('/employee-list');
+      };
+
     return (
         <>
-            <ToastContainer />
-            <h1>Employee List</h1>
+           <div className="d-flex justify-content-between align-items-center mb-3 p-2">
+              <h3>Employee List</h3>
+              <button className="btn btn-primary" onClick={handleAddBookClick}>CRUD Page</button>
+            </div>
+           
            <Table striped bordered hover>
-                <thead>
+                <thead className='table-dark'>
                     <tr className="text-center">
                         <th>#</th>
                         <th>Name</th>
