@@ -15,37 +15,44 @@ namespace FullStackCrud.Server
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container
-            builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("ConnectionStrings"));
+            var configuration = builder.Configuration;
 
-            // Register MongoClient as Singleton
-            builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
+            // ✅ Configure MongoDB connection string (directly from environment variable)
+            var mongoConnectionString = configuration["ConnectionStrings:Connection"];
+            if (string.IsNullOrEmpty(mongoConnectionString))
             {
-                var mongoClient = new MongoClient(builder.Configuration.GetValue<string>("ConnectionStrings:Connection"));
-                return mongoClient;
-            });
+                throw new InvalidOperationException("MongoDB Atlas connection string not found in environment variables.");
+            }
 
-            // Register services
+            // ✅ Register MongoClient as a Singleton
+            builder.Services.AddSingleton<IMongoClient>(new MongoClient(mongoConnectionString));
+
+            // ✅ Register services
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<EmployeeService>();
 
+            // ✅ Add controllers and Swagger
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // ✅ CORS setup (must match deployed frontend domain)
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin", policy =>
                 {
-                    policy.WithOrigins("https://employee-information-3f37.vercel.app")   // Allow any origin (frontend domain)
-             .AllowAnyHeader()   // Allow any headers
-             .AllowAnyMethod();
+                    policy.WithOrigins("https://employee-information-3f37.vercel.app")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
                 });
             });
 
-            // JWT authentication setup
-            var jwtSection = builder.Configuration.GetSection("Jwt");
-            var jwtKey = jwtSection.GetValue<string>("Key");
+            // ✅ JWT authentication setup
+            var jwtKey = configuration["Jwt:Key"];
+            if (string.IsNullOrEmpty(jwtKey))
+            {
+                throw new InvalidOperationException("JWT key not found in environment variables.");
+            }
 
             builder.Services.AddAuthentication(options =>
             {
@@ -67,24 +74,27 @@ namespace FullStackCrud.Server
             });
 
             var app = builder.Build();
+
+            // ✅ CORS middleware BEFORE routing
             app.UseCors("AllowSpecificOrigin");
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
+            // Swagger only in Development
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
-       
-            app.UseAuthentication();
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapGet("/", () => "Backend is running!");
+            // API routes
             app.MapControllers();
+            app.MapGet("/", () => "Backend is running!");
             app.MapFallbackToFile("/index.html");
 
             app.Run();
