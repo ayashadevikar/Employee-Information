@@ -37,7 +37,9 @@ namespace FullStackCrud.Server
             {
                 options.AddPolicy("AllowSpecificOrigin", policy =>
                 {
-                    policy.WithOrigins("https://employee-information-3f37.vercel.app")   // Allow any origin (frontend domain)
+                    policy.WithOrigins("https://employee-information-3f37.vercel.app",
+                        "https://employee-information-2.onrender.com"
+                        )   // Allow any origin (frontend domain)
              .AllowAnyHeader()   // Allow any headers
              .AllowAnyMethod();
                 });
