@@ -35,12 +35,10 @@ namespace FullStackCrud.Server
 
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowSpecificOrigin", policy =>
+                options.AddPolicy("AllowAll", policy =>
                 {
-                    policy.WithOrigins("https://employee-information-3f37.vercel.app",
-                        "https://employee-information-2.onrender.com"
-                        )   // Allow any origin (frontend domain)
-             .AllowAnyHeader()   // Allow any headers
+                    policy.AllowAnyOrigin()
+              .AllowAnyHeader()   // Allow any headers
              .AllowAnyMethod();
                 });
             });
@@ -69,7 +67,7 @@ namespace FullStackCrud.Server
             });
 
             var app = builder.Build();
-            app.UseCors("AllowSpecificOrigin");
+           
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
@@ -80,7 +78,7 @@ namespace FullStackCrud.Server
                 app.UseSwaggerUI();
             }
 
-
+            app.UseCors("AllowAll");
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseAuthorization();
