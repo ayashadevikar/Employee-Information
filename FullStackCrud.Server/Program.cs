@@ -35,7 +35,7 @@ namespace FullStackCrud.Server
 
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll", policy =>
+                options.AddPolicy("AllowSpecificOrigin", policy =>
                 {
                     policy.WithOrigins("https://employee-information-3f37.vercel.app")   // Allow any origin (frontend domain)
              .AllowAnyHeader()   // Allow any headers
@@ -67,6 +67,7 @@ namespace FullStackCrud.Server
             });
 
             var app = builder.Build();
+            app.UseCors("AllowSpecificOrigin");
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
@@ -77,7 +78,7 @@ namespace FullStackCrud.Server
                 app.UseSwaggerUI();
             }
 
-            app.UseCors("AllowAll");
+       
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseAuthorization();
