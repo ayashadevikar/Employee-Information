@@ -14,54 +14,65 @@ namespace FullStackCrud.Server
     {
         public static void Main(string[] args)
         {
-            // Load .env file
-            Env.Load();
-     
+            // Load .env file locally (in development)
+            if (File.Exists(".env"))
+            {
+                Env.Load();
+            }
+
             var builder = WebApplication.CreateBuilder(args);
 
-            // Load sensitive config values from environment variables (.env)
+            // Load sensitive config values from environment variables
             var mongoConnectionString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING");
             var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
+            var databaseName = Environment.GetEnvironmentVariable("DATABASE_NAME");
 
-            // Add services to the container
-            builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("ConnectionStrings"));
+            if (string.IsNullOrEmpty(mongoConnectionString))
+            {
+                throw new Exception("DATABASE_CONNECTION_STRING environment variable is missing.");
+            }
 
-            // Register MongoClient as Singleton with env value
+            if (string.IsNullOrEmpty(jwtKey))
+            {
+                throw new Exception("JWT_SECRET_KEY environment variable is missing.");
+            }
+
+            // Register MongoClient as Singleton
             builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
             {
-                var mongoClient = new MongoClient(mongoConnectionString);
-                return mongoClient;
+                return new MongoClient(mongoConnectionString);
             });
 
-            //// Register MongoClient as Singleton
-            //builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
-            //{
-            //    var mongoClient = new MongoClient(builder.Configuration.GetValue<string>("ConnectionStrings:Connection"));
-            //    return mongoClient;
-            //});
-
             // Register services
-            builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<EmployeeService>();
+            builder.Services.AddScoped<UserService>();
+
+            // Manually configure DatabaseSettings from environment variables
+            builder.Services.Configure<DatabaseSettings>(options =>
+            {
+                options.Connection = mongoConnectionString;
+                options.DatabaseName = databaseName;
+                options.EmployeeCollectionName = "employees";
+                options.UserCollectionName = "users";
+            });
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // CORS setup (adjust origin as needed for production)
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll", policy =>
                 {
-                    policy.AllowAnyOrigin()
-              .AllowAnyHeader()   // Allow any headers
-             .AllowAnyMethod();
+                    policy
+                        .AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
                 });
             });
 
             // JWT authentication setup
-            //var jwtSection = builder.Configuration.GetSection("Jwt");
-            //var jwtKey = jwtSection.GetValue<string>("Key");
-
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -82,7 +93,6 @@ namespace FullStackCrud.Server
             });
 
             var app = builder.Build();
-           
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
@@ -95,8 +105,9 @@ namespace FullStackCrud.Server
 
             app.UseCors("AllowAll");
             app.UseAuthentication();
-            app.UseHttpsRedirection();
             app.UseAuthorization();
+
+            app.UseHttpsRedirection();
 
             app.MapGet("/", () => "Backend is running!");
             app.MapControllers();
