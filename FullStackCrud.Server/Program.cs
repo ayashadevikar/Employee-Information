@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using FullStackCrud.Server.Helpers;
+using DotNetEnv;
 
 namespace FullStackCrud.Server
 {
@@ -13,17 +14,31 @@ namespace FullStackCrud.Server
     {
         public static void Main(string[] args)
         {
+            // Load .env file
+            Env.Load();
+     
             var builder = WebApplication.CreateBuilder(args);
+
+            // Load sensitive config values from environment variables (.env)
+            var mongoConnectionString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING");
+            var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
 
             // Add services to the container
             builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("ConnectionStrings"));
 
-            // Register MongoClient as Singleton
+            // Register MongoClient as Singleton with env value
             builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
             {
-                var mongoClient = new MongoClient(builder.Configuration.GetValue<string>("ConnectionStrings:Connection"));
+                var mongoClient = new MongoClient(mongoConnectionString);
                 return mongoClient;
             });
+
+            //// Register MongoClient as Singleton
+            //builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
+            //{
+            //    var mongoClient = new MongoClient(builder.Configuration.GetValue<string>("ConnectionStrings:Connection"));
+            //    return mongoClient;
+            //});
 
             // Register services
             builder.Services.AddScoped<UserService>();
@@ -44,8 +59,8 @@ namespace FullStackCrud.Server
             });
 
             // JWT authentication setup
-            var jwtSection = builder.Configuration.GetSection("Jwt");
-            var jwtKey = jwtSection.GetValue<string>("Key");
+            //var jwtSection = builder.Configuration.GetSection("Jwt");
+            //var jwtKey = jwtSection.GetValue<string>("Key");
 
             builder.Services.AddAuthentication(options =>
             {
